@@ -24,11 +24,11 @@ test('resulting file is a gzipped tar archive', function (t) {
   var filename = path.join(__dirname, 'pack-test.js')
   var tarPath = output + '/@scope/modulename-pack-test.tar.gz'
 
-  var _stat = fs.stat
-  fs.stat = function (fpath, cb) {
+  var _lstat = fs.lstat
+  fs.lstat = function (fpath, cb) {
     t.equal(fs.existsSync(output), true, 'created output folder')
     t.equal(fpath, filename, 'correct filename')
-    _stat(fpath, cb)
+    _lstat(fpath, cb)
   }
 
   var resultStream
@@ -93,7 +93,7 @@ test('resulting file is a gzipped tar archive', function (t) {
   pack(filename, tarPath, function (err) {
     t.error(err, 'no error')
     t.equal(fs.existsSync(tarPath), true, 'file created')
-    fs.stat = _stat
+    fs.lstat = _lstat
     fs.createWriteStream = _createWriteStream
     fs.createReadStream = _createReadStream
     zlib.createGzip = _createGzip
